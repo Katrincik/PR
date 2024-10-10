@@ -32,12 +32,24 @@ fetch(url).then(response => {
         products.push(product);
     });
 
+    // Conversion MDL to EUR
+    const EUR_TO_MDL = 19.34;
+    const MDL_TO_EUR = 1 / EUR_TO_MDL;
+
+    let convertBooks = products.map(product => {
+        let convertedPrice = (product.price * MDL_TO_EUR).toFixed(2);
+
+        return {
+            name: product.name,
+            price: convertedPrice + "€"
+        };
+    } )
+
     let extractedData = {
-        products: products,
         description: mainBookAuthor ? mainBookAuthor.textContent.trim() : 'No general description available'
     };
 
-    console.log('Extracted data: ', extractedData);
+    console.log('Extracted data: ', convertBooks, extractedData);
 
 }).catch(error => {
     console.error('There has been a problem with your fetch operation:', error);

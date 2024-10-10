@@ -12,13 +12,18 @@ fetch(url).then(response => {
 
     const bookName = document.querySelectorAll('.md-title');
     const bookPrice = document.querySelectorAll('.suma');
-    const mainBookAuthor = document.querySelector('.autorProdus'); // Select the general description
+    const mainBookAuthor = document.querySelector('.autorProdus');
 
     let products = [];
 
     bookName.forEach((name, index) => {
+        // Trim whitespaces
         let productName = name.textContent.trim();
-        let price = bookPrice[index] ? bookPrice[index].textContent.trim() : 'N/A'
+
+        // Validate the price
+        let noPrice = bookPrice[index] ? bookPrice[index].textContent.trim() : 'N/A';
+        let price = parseInt(noPrice.replace(/\D/g, ''), 10);
+        price = isNaN(price) ? 'N/A' : price;
 
         let product = {
             name: productName,

@@ -12,18 +12,27 @@ fetch(url).then(response => {
 
     const bookName = document.querySelectorAll('.md-title');
     const bookPrice = document.querySelectorAll('.suma');
+    const mainBookAuthor = document.querySelector('.autorProdus'); // Select the general description
 
     let products = [];
 
     bookName.forEach((name, index) => {
+        let productName = name.textContent.trim();
+        let price = bookPrice[index] ? bookPrice[index].textContent.trim() : 'N/A'
+
         let product = {
-            name: name.textContent.trim(),
-            price: bookPrice[index] ? bookPrice[index].textContent.trim() : 'N/A'
+            name: productName,
+            price: price
         };
         products.push(product);
     });
 
-    console.log('Extracted data: ', products);
+    let extractedData = {
+        products: products,
+        description: mainBookAuthor ? mainBookAuthor.textContent.trim() : 'No general description available'
+    };
+
+    console.log('Extracted data: ', extractedData);
 
 }).catch(error => {
     console.error('There has been a problem with your fetch operation:', error);

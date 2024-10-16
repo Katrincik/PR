@@ -42,19 +42,40 @@ fetch(url).then(response => {
     const MDL_TO_EUR = 1 / EUR_TO_MDL;
 
     let convertBooks = products.map(product => {
-        let convertedPrice = (product.price * MDL_TO_EUR).toFixed(3);
+        let convertedPrice = (product.price * MDL_TO_EUR).toFixed(2);
 
         return {
             name: product.name,
-            price: convertedPrice + "€"
+            price: convertedPrice
         };
     } )
+
+    const minRange = 10;
+    const maxRange = 13;
+
+    // Filter products
+    let filteredBooks = convertBooks.filter(product => {
+        if (product.price >= minRange && product.price <= maxRange) {
+            return product.price;
+        }
+    });
+
+    // Sum up the prices of the products
+    let totalPrice = filteredBooks.reduce((sum, product) => {
+        return sum + parseFloat(product.price);
+    },0);
 
     let extractedData = {
         description: mainBookAuthor ? mainBookAuthor.textContent.trim() : 'No general description available'
     };
 
-    console.log('Extracted data: ', convertBooks, extractedData);
+    let finalData = {
+        filteredBooks : filteredBooks,
+        sum : totalPrice,
+        timestamp: new Date().toISOString()
+    };
+
+    console.log('Extracted data: ', convertBooks, extractedData, finalData);
 
 }).catch(error => {
     console.error('There has been a problem with your fetch operation:', error);

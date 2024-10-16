@@ -1,13 +1,18 @@
+// Use library to automate the process of scraping
 const { chromium } = require('playwright');
 
 async function scrapeBooks() {
+    // Launch browser instance in the background without UI
     const browser = await chromium.launch({ headless: true });
+    // Create new browser page for scraping content
     const page = await browser.newPage();
 
+    // Http request, and fully load all content
     await page.goto('https://carturesti.md/autor/osamu_dazai', { waitUntil: 'networkidle' });
 
     await page.waitForSelector('.md-title');
 
+    // Allows to run js in the context of webpage similar as using Developer Tool console
     const books = await page.evaluate(() => {
         const bookName = document.querySelectorAll('.md-title');
         const bookPrice = document.querySelectorAll('.suma');

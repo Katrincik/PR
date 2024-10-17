@@ -104,6 +104,38 @@ client.on('end', () => {
     // console.log('Filtered books:', filteredBooks);
     // console.log('Total price:', totalPrice);
     console.log('Final data:', finalData);
+
+    // JSON serialization
+    function JSONserialization(data) {
+        const booksJSON = data.filteredBooks.map(book => {
+            return `{"name": "${book.name}", "price": ${book.price}}`;
+        }).join(', ');
+
+        const jsonString = `{ "filteredBooks": [${booksJSON}], }`;
+
+        return jsonString;
+    }
+
+    // XML serialization
+    function XMLserialization(data) {
+        const booksXML = data.filteredBooks.map(book => {
+            return `<book>
+                        <name>${book.name}</name>
+                        <price>${book.price}</price>
+                    </book>`;
+        }).join('');
+        const xmlString = `<data> 
+                                      <filteredBooks>${booksXML}</filteredBooks> 
+                                  </data>`;
+
+        return xmlString;
+    }
+
+    const xmlData = XMLserialization(finalData);
+    const jsonData = JSONserialization(finalData);
+
+    console.log('Serialized XML:\n', xmlData);
+    console.log('Serialized JSON:\n', jsonData);
 });
 
 // Handle errors during the TLS connection

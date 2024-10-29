@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 
 // Initialize Express and Sequelize
 const app = express();
@@ -86,8 +88,39 @@ app.delete('/books', async (req, res) => {
     }
 });
 
+// Set up multer for file uploads
+const upload = multer({ dest: 'uploads/' });
+
+// Route to handle JSON file upload
+app.post('/uploadJson', upload.single('file'), (req, res) => {
+    // Make sure the file is uploaded
+    if (!req.file) {
+        return res.status(400).json({error: 'No file uploaded'});
+    }
+
+    // Make sure the file is json
+    if (req.file.mimetype !== 'application/json') {
+        return res.status(400).json({error: 'File should be json'});
+    }
+
+    // Read and parse the JSON file
+    fs.readFile(req.file.path, 'utf8', (err,data) => {
+        if (err) {
+            return res.status(500).json({error: 'Failed to read file'});
+        }
+
+        try {
+            const jsonData = JSON.parse(data);
+            res.json({message: 'File uploaded and parsed', data: jsonData});
+        } catch {
+            return res.status(400).json({error: 'Invalid json format'});
+        }
+    });
+});
+
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+

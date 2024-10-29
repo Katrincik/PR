@@ -39,14 +39,13 @@ app.post('/books', async (req, res) => {
 
 // GET - get book by ID
 app.get('/books', async (req, res) => {
-    const {id} = req.body;
+    const {offset=0, limit=5} = req.query;
     try {
-        const book = await Book.findByPk(id);
-        if (book) {
-            res.json(book);
-        } else {
-            res.status(404).json({error: "Book not found"});
-        }
+        const book = await Book.findAll({
+            offset: parseInt(offset),
+            limit: parseInt(limit)
+        });
+        res.json(book);
     } catch (error) {
         res.status(500).json({ error: error.message});
     }
